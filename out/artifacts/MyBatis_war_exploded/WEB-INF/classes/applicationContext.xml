@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+        https://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/cache/spring-tx.xsd http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
+<!--spring配置文件中的组件扫描-->
+    <context:component-scan base-package="com.web">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+<!--从properties中导入数据源-->
+    <context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
+<!--配数据源,使用默认的数据源，原来使用的是druid-->
+    <bean id="ds" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="username" value="${user}"/>
+        <property name="password" value="${password}"/>
+        <property name="url"   value="${url}"/>
+        <property name="driverClassName" value="${driverClassName}"/>
+    </bean>
+<!--使用mybatis操作数据库，配置sqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--全局配置文件位置-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+        <!--数据源引用-->
+        <property name="dataSource" ref="ds"></property>
+        <!--sql映射文件位置-->
+        <property name="mapperLocations" value="classpath:mapper/*.xml"></property>
+    </bean>
+<!--每一个dao接口的实现加入到ioc容器中 -->
+    <mybatis-spring:scan base-package="com.web.dao"/>
+<!--配置事务控制：事务管理器，管理数据源里连接的关闭和提交-->
+    <bean id="tx" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="ds"></property>
+    </bean>
+<!--    <tx:annotation-driven transaction-manager="tx"></tx:annotation-driven> 把事务注掉，一打开，会有好多乱码-->
+</beans>

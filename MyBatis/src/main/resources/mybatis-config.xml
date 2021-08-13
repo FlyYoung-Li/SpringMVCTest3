@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<!--    引入外部的jdbc.properties-->
+    <properties resource="jdbc.properties"></properties>
+    <settings>
+        <!--开启驼峰命名规则-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
+<!--    要进行测试，需要sqlSessionFactory的创建（所以在Mybatis中，配置数据源）-->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driverClassName}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${user}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+        <!--配置sql映射文件(映射器)-->
+<mappers>
+<!--    这里也是用于测试，配置dao接口-->
+    <package name="com.web.dao"/>
+</mappers>
+</configuration>

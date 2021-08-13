@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!--    引入外部的jdbc.properties-->
+    <properties resource="jdbc.properties"></properties>
+
+    <settings><!--全局延迟加载-->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!--属性按需加载-->
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <!--二级缓存使用-->
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
+<!--    配置插件，其实就是配置拦截器，原先在mybatsi中配置pageHelper，
+        现在整合spring，配置在spring配置文件中的sqlSessionFactory中-->
+    <!--<plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <property name="param1" value="value1"/>
+        </plugin>
+    </plugins>-->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driverClassName}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${user}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--配置sql映射文件(映射器)-->
+    <mappers>
+        <!--    这里也是用于测试，配置dao接口-->
+        <package name="com.mbg.mapper"/>
+    </mappers>
+</configuration>
